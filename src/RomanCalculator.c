@@ -191,7 +191,3 @@ int subtract(char * input1, char * input2, char * output){
 	convertInt2String(num_output, output);
 	return 1;
 }
-
-void helloworld(){
-	printf("hello again world!\n");
-}

@@ -9,7 +9,5 @@ int validStringRomanNumeralCheck(char * input);
 int validIntRomanNumeralCheck(int input);
 int convertString2Int(char * input, int * output);
 int convertInt2String(int input, char * output);	
-
 int add(char * input1, char * input2, char * output);
 int subtract(char * input1, char * input2, char * output);
-void helloworld();
