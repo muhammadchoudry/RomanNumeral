@@ -13,15 +13,16 @@ By:				Muhammad Choudry
 int main(){
 	printf("TestAdd\n");
 	
+	
 	//Allocate memory for the string
 	char *str = (char *) malloc(16*sizeof(char));	//Max Roman number has 15 characters + 1 for null character
-	int result = 0;
 	
-	int input = 3060;
+	int input = 1;
 	convertInt2String(input, str);
-	printf("%s\n",str);
-	convertString2Int(str, &result);
-	printf("%i\n",result);
+	
+	//convertString2Int(str, &result);
+	//printf("%i\n",result);
+	
 	
 	//Free the memory for the string
 	free(str);

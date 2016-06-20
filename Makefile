@@ -4,6 +4,7 @@ INC_DIR = ./include
 BIN_DIR = ./bin
 LIB_DIR = ./lib
 OBJ_DIR = ./obj
+TEST_DIR = ./test
 
 #The includes
 INCLUDES = -I $(INC_DIR)
@@ -17,7 +18,7 @@ CC = gcc
 #  -Wall turns on most, but not all, compiler warnings
 CFLAGS  = -g -Wall
 
-all: RomanCalculator TestAdd
+all: RomanCalculator TestAdd testsuite
 
 #Create a static library for RomanCalculator
 RomanCalculator:
@@ -27,6 +28,10 @@ RomanCalculator:
 #Create a test application 
 TestAdd:
 	$(CC) $(CFLAGS) $(INCLUDES) $(LIBRARIES) -o $(BIN_DIR)/TestAdd $(SRC_DIR)/TestAdd.c lib/libromancalculator.a
+	
+#Create a test application 
+testsuite:
+	$(CC) $(CFLAGS) $(INCLUDES) $(LIBRARIES) -o $(BIN_DIR)/testsuite $(TEST_DIR)/testsuite.c lib/libromancalculator.a `pkg-config --cflags --libs check`
 
 #Clean command
 clean:

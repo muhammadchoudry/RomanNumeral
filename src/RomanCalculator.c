@@ -73,29 +73,14 @@ int convertString2Int(char * input, int * output){
 		
 		
 		switch (input[pos]) {
-			case 'I':    
-				value= 1;
-				break;
-			case 'V':
-				value = 5;
-				break;
-			case 'X':
-				value = 10;
-				break;
-			case 'L':
-				value = 50;
-				break;
-			case 'C':
-				value = 100;
-				break;
-			case 'D':
-				value = 500;
-				break;
-			case 'M':
-				value = 1000;
-				break;
-			default:
-    			break;
+			case 'I': value= 1; break;
+			case 'V': value = 5; break;
+			case 'X': value = 10; break;
+			case 'L': value = 50; break;
+			case 'C': value = 100; break;
+			case 'D': value = 500; break;
+			case 'M': value = 1000; break;
+			default: break;
 		}
 		
 		if (pos + 1 < length){
@@ -128,8 +113,10 @@ int convertInt2String(int input, char * output){
 		return 0;
 	}
 	
+	strcpy(output,"");
+	
 	//Some data structions to help us do the conversion
-	int num_possibilities = 12;
+	int num_possibilities = 13;
 	const char *options[num_possibilities];
 	options[0] = "M";
 	options[1] = "CM";
@@ -141,9 +128,10 @@ int convertInt2String(int input, char * output){
 	options[7] = "XL";
 	options[8] = "X";
 	options[9] = "IX";
-	options[10] = "IV";
-	options[11] = "I";
-	int boundaries[] = {1000,900,500,400,100,90,50,40,10,9,4,5,1};
+	options[10] = "V";
+	options[11] = "IV";
+	options[12] = "I";
+	int boundaries[] = {1000,900,500,400,100,90,50,40,10,9,5,4,1};
 	
 	//Convert the string
 	while (input != 0){
@@ -187,6 +175,7 @@ int subtract(char * input1, char * input2, char * output){
 	if (convertString2Int(input1, &num_input1)==0){return 0;}
 	if (convertString2Int(input2, &num_input2)==0){return 0;}
 	num_output = num_input1 - num_input2;
+	printf("num_output:%i\n",num_output);
 	if (validIntRomanNumeralCheck(num_output) == 0){return 0;}
 	convertInt2String(num_output, output);
 	return 1;
