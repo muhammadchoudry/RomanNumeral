@@ -18,18 +18,14 @@ CC = gcc
 #  -Wall turns on most, but not all, compiler warnings
 CFLAGS  = -g -Wall
 
-all: RomanCalculator TestAdd testsuite
+all: RomanCalculator testsuite
 
 #Create a static library for RomanCalculator
 RomanCalculator:
 	$(CC) $(CFLAGS) -c -o $(OBJ_DIR)/RomanCalculator.o $(SRC_DIR)/RomanCalculator.c
 	ar rs $(LIB_DIR)/libromancalculator.a $(OBJ_DIR)/RomanCalculator.o
-
-#Create a test application 
-TestAdd:
-	$(CC) $(CFLAGS) $(INCLUDES) $(LIBRARIES) -o $(BIN_DIR)/TestAdd $(SRC_DIR)/TestAdd.c lib/libromancalculator.a
 	
-#Create a test application 
+#Create a test suite
 testsuite:
 	$(CC) $(CFLAGS) $(INCLUDES) $(LIBRARIES) -o $(BIN_DIR)/testsuite $(TEST_DIR)/testsuite.c lib/libromancalculator.a `pkg-config --cflags --libs check`
 
