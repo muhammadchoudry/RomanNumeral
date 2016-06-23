@@ -45,3 +45,7 @@ A note on design philosphy of RomanCalculator API
  	- User is responsible for allocating appropriate amount of memory (atleast 16 characters worth) for string output
  - The return value indicates weather or not the function successfully completed the task (0=fail,1=success)
  	- It is up to the user of the library to determine how to handle the error for their specific applications
+ 	
+A note on builds:
+ - libromancalculator.a: release build that does not print out any error messages, but will indicate error with return value
+ - libromanalculator_debug.a: a debug build which prints out error messages
