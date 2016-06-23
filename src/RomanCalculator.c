@@ -8,6 +8,29 @@ By:				Muhammad Choudry
 #include <stdio.h>
 #include <string.h>
 
+//Convert a roman numeral character to integer format
+//The return value returns if the input was successfully converted or not
+int convertChar2Int(char input, int * value){
+	switch (input) {
+		case 'I': *value= 1; break;
+		case 'V': *value = 5; break;
+		case 'X': *value = 10; break;
+		case 'L': *value = 50; break;
+		case 'C': *value = 100; break;
+		case 'D': *value = 500; break;
+		case 'M': *value = 1000; break;
+		case 'i': *value= 1; break;
+		case 'v': *value = 5; break;
+		case 'x': *value = 10; break;
+		case 'l': *value = 50; break;
+		case 'c': *value = 100; break;
+		case 'd': *value = 500; break;
+		case 'm': *value = 1000; break;
+		default: return 0;
+	}
+	return 1;	
+}
+
 //Check to see if integer can be used as a roman numeral
 int validIntRomanNumeralCheck(int input){
 	if (input < 0 || input > 3999){
@@ -19,36 +42,106 @@ int validIntRomanNumeralCheck(int input){
 
 //Check to see if the string is a valid roman numeral
 int validStringRomanNumeralCheck(char * input){
+	
 	int length = strlen(input);
 	
-	char last_char = '\0';
+	//Check to see if the range is within length
+	if (length == 0 || length > 15){
+		return 0;	
+	}
+	
+	int value = -1;
+	int next_value = -1;
+	int last_value = -1;
+	int last_last_value = -1;
+	
 	int count = 0;
-	int i;
-	for (i = 0; i < length; i++){
-		if (last_char == input[i]){
+	int pos;
+	for (pos = length-1; pos >=0; pos--){
+		
+		int result1 = 1;
+		int result2 = 1;
+		//Get the current character value
+		if (pos == length-1){
+			result1 = convertChar2Int(input[pos],&value);
+		} else {
+			value = next_value;
+		}
+		//Get the next character value
+		if (pos != 0){
+			result2 = convertChar2Int(input[pos-1],&next_value);
+		}
+		
+		//Invalid character
+		if (result1==0 || result2==0){
+			return 0;	
+		}
+		
+		//Keep track of repeated characters
+		if (last_value == value){
 			count++;	
 		} else {
 			count = 0;	
 		}
 		
 		//Characters can only repeat 1 time
-		if (input[i] == 'V' || input[i] == 'L' || input[i] == 'D'){
-			if (count > 1){
-				break;	
+		if ( value==5 || value==50 || value==500 ){
+			if (count >= 1){
+				return 0;	
 			}
 		//Characters can only repeat 3 times
-		} else if (input[i] == 'I' || input[i] == 'X' || input[i] == 'C' || input[i] == 'M'){
-			if (count > 3){
-				break;	
+		} else if (value == 1 || value == 10 || value == 100 || value == 1000){
+			if (count >= 3){
+				return 0;
 			}
-		//Invalid character
-		} else {
-			return 0;	
+		} 
+		
+		if (last_value >= 0){
+			//Subtracting a value
+			if (value < last_value){
+				
+				//Can only subtract one of I,X,C,M
+				if (!(value == 1 || value == 10 || value == 100 || value == 1000)){
+					return 0;
+				}
+				
+				//Subtracted value must be either 1/5 or 1/10 of the last value
+				if (!(  ((5*value)==last_value) || ((10*value)==last_value)  )){
+					return 0;
+				}
+				
+				//Must be either first numeral or 10 times smaller than next 
+				if (!(  (pos == 0) || ( next_value*10 >= value) )){
+					return 0;	
+				}
+				
+				//We're in the middle then next value must be >= last value
+				if (pos > 0 && pos < length-1){
+					if (!(next_value >= last_value)){
+						return 0;	
+					}
+				}
+				
+				//First part of compound numeral must be bigger than numeral after
+				if (last_last_value >= -0){
+					if (!( last_last_value < value )){
+						return 0;	
+					}
+				}
+				
+			}
 		}
-		last_char = input[i];
+		
+		if (last_value == -1){
+			last_value = value;
+		} else {
+			last_last_value = last_value;
+			last_value = value;
+		}
 	}
 	
 	return 1;
+	
 }
 
 //Convert a string roman number to integer format
@@ -68,21 +161,15 @@ int convertString2Int(char * input, int * output){
 	
 	//Do the conversion
 	int last_value = 0;
-	for (pos = length; pos >= 0; pos--){
+	for (pos = length-1; pos >= 0; pos--){
 		int value = 0;
 		
-		
-		switch (input[pos]) {
-			case 'I': value= 1; break;
-			case 'V': value = 5; break;
-			case 'X': value = 10; break;
-			case 'L': value = 50; break;
-			case 'C': value = 100; break;
-			case 'D': value = 500; break;
-			case 'M': value = 1000; break;
-			default: break;
+		int result = convertChar2Int(input[pos],&value);
+		if (result == 0){
+			return 0;	
 		}
 		
+		//Subtract if value to the left is less than the value to the right
 		if (pos + 1 < length){
 			if (value < last_value){
 				mode = subtract;
@@ -100,9 +187,8 @@ int convertString2Int(char * input, int * output){
 		last_value = value;
 	}
 	
-	
 	//Return status
-	return 1;	
+	return validIntRomanNumeralCheck(*output);
 }
 
 //Convert an integer to a roman number format
