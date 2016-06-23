@@ -8,6 +8,10 @@ By:				Muhammad Choudry
 #include <stdio.h>
 #include <string.h>
 
+#ifndef DEBUGMODE
+	#define DEBUGMODE 0
+#endif
+
 //Convert a roman numeral character to integer format
 //The return value returns if the input was successfully converted or not
 int convertChar2Int(char input, int * value){
@@ -26,7 +30,11 @@ int convertChar2Int(char input, int * value){
 		case 'c': *value = 100; break;
 		case 'd': *value = 500; break;
 		case 'm': *value = 1000; break;
-		default: return 0;
+		default: 
+			#if DEBUGMODE==1
+				printf("Error!  Not a valid character <%c>",input);
+			#endif
+			return 0;
 	}
 	return 1;	
 }
@@ -34,7 +42,10 @@ int convertChar2Int(char input, int * value){
 //Check to see if integer can be used as a roman numeral
 int validIntRomanNumeralCheck(int input){
 	if (input < 0 || input > 3999){
-		return 0;	
+		#if DEBUGMODE==1
+			printf("Error!  Not a valid number <%i>",input);
+		#endif
+		return 0;
 	} else {
 		return 1;	
 	}
@@ -47,6 +58,9 @@ int validStringRomanNumeralCheck(char * input){
 	
 	//Check to see if the range is within length
 	if (length == 0 || length > 15){
+		#if DEBUGMODE==1
+			printf("Error! Roman numeral longer than it should be <%i>",length);
+		#endif
 		return 0;	
 	}
 	
@@ -87,11 +101,17 @@ int validStringRomanNumeralCheck(char * input){
 		//Characters can only repeat 1 time
 		if ( value==5 || value==50 || value==500 ){
 			if (count >= 1){
+				#if DEBUGMODE==1
+					printf("Error! Character can only repeat once <%c>",input[pos]);
+				#endif
 				return 0;	
 			}
 		//Characters can only repeat 3 times
 		} else if (value == 1 || value == 10 || value == 100 || value == 1000){
 			if (count >= 3){
+				#if DEBUGMODE==1
+					printf("Error! Character can only repeat three times <%c>",input[pos]);
+				#endif
 				return 0;
 			}
 		} 
@@ -102,22 +122,34 @@ int validStringRomanNumeralCheck(char * input){
 				
 				//Can only subtract one of I,X,C,M
 				if (!(value == 1 || value == 10 || value == 100 || value == 1000)){
+					#if DEBUGMODE==1
+						printf("Error! The smaller number in a compound numeral can only be I,X,C,M");
+					#endif
 					return 0;
 				}
 				
 				//Subtracted value must be either 1/5 or 1/10 of the last value
 				if (!(  ((5*value)==last_value) || ((10*value)==last_value)  )){
+					#if DEBUGMODE==1
+						printf("Error! The smaller number in a compound numeral must be 1/5 or 1/10 of larger number");
+					#endif
 					return 0;
 				}
 				
 				//Must be either first numeral or 10 times smaller than next 
 				if (!(  (pos == 0) || ( next_value*10 >= value) )){
+					#if DEBUGMODE==1
+						printf("Error! The smaller number in a compound numeral must be the first number in string or 10 times smaller than the number next to it");
+					#endif
 					return 0;	
 				}
 				
 				//We're in the middle then next value must be >= last value
 				if (pos > 0 && pos < length-1){
 					if (!(next_value >= last_value)){
+						#if DEBUGMODE==1
+							printf("Error! The number to the left of the smaller number in a compound numeral must bigger than the one on the right");
+						#endif
 						return 0;	
 					}
 				}
@@ -125,6 +157,9 @@ int validStringRomanNumeralCheck(char * input){
 				//First part of compound numeral must be bigger than numeral after
 				if (last_last_value >= -0){
 					if (!( last_last_value < value )){
+						#if DEBUGMODE==1
+							printf("Error! The first part of the compund numeral must be bigger than the numeral after");
+						#endif
 						return 0;	
 					}
 				}
