@@ -1,9 +1,11 @@
 #Relevant directories
+LIB = lib
+OBJ = obj
 SRC_DIR = ./src
 INC_DIR = ./include
 BIN_DIR = ./bin
-LIB_DIR = ./lib
-OBJ_DIR = ./obj
+LIB_DIR = ./${LIB}
+OBJ_DIR = ./${OBJ}
 TEST_DIR = ./test
 
 #The includes
@@ -22,6 +24,8 @@ all: RomanCalculator testsuite
 
 #Create a static library for RomanCalculator
 RomanCalculator:
+	mkdir -p ${OBJ}
+	mkdir -p ${LIB}
 	$(CC) $(CFLAGS) -c -o $(OBJ_DIR)/RomanCalculator.o $(SRC_DIR)/RomanCalculator.c
 	ar rs $(LIB_DIR)/libromancalculator.a $(OBJ_DIR)/RomanCalculator.o
 	
